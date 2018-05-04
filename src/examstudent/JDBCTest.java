@@ -15,7 +15,7 @@ public class JDBCTest {
 		Student student = getStudentFromConsole();
 		addNewStudent(student);
 	}
-	@Test
+	
 	public void testGetStudent() throws ClassNotFoundException, SQLException, IOException {
 		int searchType = getSearchTypeStudent();
 		Student student = searchStudent(searchType);
@@ -26,7 +26,7 @@ public class JDBCTest {
 		if(student != null) {
 			System.out.println(student);
 		}else {
-			System.out.println("²éÎÞ´ËÈË£¡");
+			System.out.println("ï¿½ï¿½ï¿½Þ´ï¿½ï¿½Ë£ï¿½");
 		}
 
 	}
@@ -35,11 +35,11 @@ public class JDBCTest {
 		String sql = "SELECT flowid,type,idcard,examcard,studentname,location,grade FROM student WHERE";
 		Scanner scanner = new Scanner(System.in);
 		if (searchType == 1) {
-			System.out.println("ÇëÊäÈëÉí·ÝÖ¤ºÅ£º");
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½Å£ï¿½");
 			String examCard = scanner.next();
 			sql = sql + " IDCard = '" + examCard + "'";
 		} else {
-			System.out.println("ÇëÊäÈë×¼¿¼Ö¤ºÅ£º");
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½Ö¤ï¿½Å£ï¿½");
 			String idCard = scanner.next();
 			sql = sql + " ExamCard = '" + idCard + "'";
 		}
@@ -70,11 +70,11 @@ public class JDBCTest {
 	}
 
 	private int getSearchTypeStudent() {
-		System.out.println("ÇëÊäÈë²éÑ¯ÀàÐÍ£º£¨1.Éí·ÝÖ¤²éÑ¯£»2.×¼¿¼Ö¤²éÑ¯£©");
+		System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¯ï¿½ï¿½ï¿½Í£ï¿½ï¿½ï¿½1.ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½Ñ¯ï¿½ï¿½2.×¼ï¿½ï¿½Ö¤ï¿½ï¿½Ñ¯ï¿½ï¿½");
 		Scanner scanner = new Scanner(System.in);
 		int type = scanner.nextInt();
 		if (type != 1 && type != 2) {
-			System.out.println("ÊäÈëÓÐÎóÇëÖØÐÂÊäÈë£¡");
+			System.out.println("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë£¡");
 			throw new RuntimeException();
 		}
 		return type;
@@ -83,19 +83,19 @@ public class JDBCTest {
 	private Student getStudentFromConsole() {
 		Scanner scanner = new Scanner(System.in);
 		Student student = new Student();
-		System.out.println("FlowID:");
+		System.out.print("FlowID:");
 		student.setFlowID(scanner.nextInt());
-		System.out.println("Type:");
+		System.out.print("Type:");
 		student.setType(scanner.nextInt());
-		System.out.println("IDCard:");
+		System.out.print("IDCard:");
 		student.setIdCard(scanner.next());
-		System.out.println("ExamCard:");
+		System.out.print("ExamCard:");
 		student.setExamCard(scanner.next());
-		System.out.println("StudentName:");
+		System.out.print("StudentName:");
 		student.setStudentName(scanner.next());
-		System.out.println("Location:");
+		System.out.print("Location:");
 		student.setLocalion(scanner.next());
-		System.out.println("Grade:");
+		System.out.print("Grade:");
 		student.setGrade(scanner.nextInt());
 		return student;
 	}

@@ -20,7 +20,6 @@ public class JDBCTools {
 			statement = connection.createStatement();
 			statement.execute(sql);
 		} catch (Exception e) {
-			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		} finally {
 			releaseDB(null,statement,connection);
@@ -31,7 +30,6 @@ public class JDBCTools {
 			try {
 				resultset.close();
 			} catch (SQLException e) {
-				// TODO 自动生成的 catch 块
 				e.printStackTrace();
 			}
 		}
@@ -39,7 +37,6 @@ public class JDBCTools {
 			try {
 				statement.close();
 			} catch (SQLException e) {
-				// TODO 自动生成的 catch 块
 				e.printStackTrace();
 			}
 		}
@@ -47,7 +44,6 @@ public class JDBCTools {
 			try {
 				connection.close();
 			} catch (SQLException e) {
-				// TODO 自动生成的 catch 块
 				e.printStackTrace();
 			}
 		}
