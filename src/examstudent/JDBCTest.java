@@ -2,6 +2,7 @@ package examstudent;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,12 +11,43 @@ import java.util.Scanner;
 import org.junit.jupiter.api.Test;
 
 public class JDBCTest {
+	public Student getStudent(String sql, Object... args) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultset = null;
+		Student student = null;
+		try {
+			connection = JDBCTools.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			for(int i = 0;i<args.length;i++) {
+				preparedStatement.setObject(i+1, args[1]);
+			}
+			resultset = preparedStatement.executeQuery();
+			if (resultset.next()) {
+				student = new Student();
+				student.setFlowID(resultset.getInt(1));
+				student.setType(resultset.getInt(2));
+				student.setIdCard(resultset.getString(3));
+				student.setExamCard(resultset.getString(4));
+				student.setStudentName(resultset.getString(5));
+				student.setLocalion(resultset.getString(6));
+				student.setGrade(resultset.getInt(7));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTools.releaseDB(resultset, preparedStatement, connection);
+		}
+		return student;
+	}
+
 	@Test
 	public void testAddNewStudent() throws ClassNotFoundException, IOException, SQLException {
 		Student student = getStudentFromConsole();
-		addNewStudent(student);
+		addNewStudent2(student);
 	}
-	
+
 	public void testGetStudent() throws ClassNotFoundException, SQLException, IOException {
 		int searchType = getSearchTypeStudent();
 		Student student = searchStudent(searchType);
@@ -23,10 +55,10 @@ public class JDBCTest {
 	}
 
 	private void printStudent(Student student) {
-		if(student != null) {
+		if (student != null) {
 			System.out.println(student);
-		}else {
-			System.out.println("���޴��ˣ�");
+		} else {
+			System.out.println("查无此人！");
 		}
 
 	}
@@ -35,11 +67,11 @@ public class JDBCTest {
 		String sql = "SELECT flowid,type,idcard,examcard,studentname,location,grade FROM student WHERE";
 		Scanner scanner = new Scanner(System.in);
 		if (searchType == 1) {
-			System.out.println("���������֤�ţ�");
+			System.out.println("请输入身份证号：");
 			String examCard = scanner.next();
 			sql = sql + " IDCard = '" + examCard + "'";
 		} else {
-			System.out.println("������׼��֤�ţ�");
+			System.out.println("请输入准考证号：");
 			String idCard = scanner.next();
 			sql = sql + " ExamCard = '" + idCard + "'";
 		}
@@ -70,11 +102,11 @@ public class JDBCTest {
 	}
 
 	private int getSearchTypeStudent() {
-		System.out.println("�������ѯ���ͣ���1.���֤��ѯ��2.׼��֤��ѯ��");
+		System.out.println("请输入查询类型：1.身份证查询，2.准考证查询");
 		Scanner scanner = new Scanner(System.in);
 		int type = scanner.nextInt();
 		if (type != 1 && type != 2) {
-			System.out.println("�����������������룡");
+			System.out.println("输入错误，请重新操作！");
 			throw new RuntimeException();
 		}
 		return type;
@@ -98,6 +130,13 @@ public class JDBCTest {
 		System.out.print("Grade:");
 		student.setGrade(scanner.nextInt());
 		return student;
+	}
+
+	public void addNewStudent2(Student student) throws ClassNotFoundException, IOException, SQLException {
+		String sql = "INSERT INTO student(flowid,type,idcard,examcard,studentname,location,grade)"
+				+ " VALUES(?,?,?,?,?,?,?)";
+		JDBCTools.update(sql, student.getFlowID(), student.getType(), student.getIdCard(), student.getExamCard(),
+				student.getStudentName(), student.getLocalion(), student.getGrade());
 	}
 
 	public void addNewStudent(Student student) throws ClassNotFoundException, IOException, SQLException {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,6 +13,24 @@ import java.util.Properties;
 import org.junit.Test;
 
 public class JDBCTools {
+	public static void update(String sql,Object ...args) throws ClassNotFoundException, IOException, SQLException {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		try {
+			connection = JDBCTools.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			for(int i = 0;i<args.length;i++) {
+				preparedStatement.setObject(i+1, args[i]);
+			}
+			preparedStatement.executeUpdate();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			JDBCTools.releaseDB(null, preparedStatement, connection);
+		}
+		
+	}
 	public static void update(String sql) throws ClassNotFoundException, IOException, SQLException {
 		Connection connection = null;
 		Statement statement = null;
