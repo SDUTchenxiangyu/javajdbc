@@ -11,6 +11,68 @@ import java.util.Scanner;
 import org.junit.jupiter.api.Test;
 
 public class JDBCTest {
+	@Test
+	public void testGet() {
+		// String sql = "SELECT id,name,email,birth FROM customer WHERE id = ?";
+		// Customer customer = get(Customer.class, sql, 5);
+		// System.out.println(customer);
+		String sql = "SELECT Flow_ID flowId,Type,ID_Card idCard,Exam_Card examCard,Student_Name studentName,Location localion,Grade FROM student WHERE Flow_Id = ?";
+		System.out.println(sql);
+		Student studnet = get(Student.class, sql, 5);
+	}
+
+	public <T> T get(Class<T> clazz, String sql, Object... args) {
+		T entity = null;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultset = null;
+		try {
+			connection = JDBCTools.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			for (int i = 0; i < args.length; i++) {
+				preparedStatement.setObject(i + 1, args[1]);
+			}
+			resultset = preparedStatement.executeQuery();
+			if (resultset.next()) {
+				entity = clazz.newInstance();
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTools.releaseDB(resultset, preparedStatement, connection);
+		}
+		return null;
+	}
+
+	public Customer getCustomer(String sql, Object... args) {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultset = null;
+		Customer customer = null;
+		try {
+			connection = JDBCTools.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			for (int i = 0; i < args.length; i++) {
+				preparedStatement.setObject(i + 1, args[1]);
+			}
+			resultset = preparedStatement.executeQuery();
+			if (resultset.next()) {
+				customer = new Customer();
+				customer.setId(resultset.getInt(1));
+				customer.setName(resultset.getString(2));
+				customer.setEmail(resultset.getString(3));
+				customer.setBirth(resultset.getDate(4));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JDBCTools.releaseDB(resultset, preparedStatement, connection);
+		}
+		return customer;
+	}
+
 	public Student getStudent(String sql, Object... args) {
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -19,8 +81,8 @@ public class JDBCTest {
 		try {
 			connection = JDBCTools.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			for(int i = 0;i<args.length;i++) {
-				preparedStatement.setObject(i+1, args[1]);
+			for (int i = 0; i < args.length; i++) {
+				preparedStatement.setObject(i + 1, args[1]);
 			}
 			resultset = preparedStatement.executeQuery();
 			if (resultset.next()) {
